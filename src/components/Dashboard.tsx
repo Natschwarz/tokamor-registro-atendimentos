@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Users, UserPlus, ClipboardList, BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
 interface DashboardProps {
   onNavigate: (section: string) => void;
   stats: {
@@ -11,14 +9,13 @@ interface DashboardProps {
     thisMonth: number;
   };
 }
-
-const Dashboard = ({ onNavigate, stats }: DashboardProps) => {
-  return (
-    <div className="space-y-8">
+const Dashboard = ({
+  onNavigate,
+  stats
+}: DashboardProps) => {
+  return <div className="space-y-8">
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          Centro de Assistência
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">Tok de Amor ❤️</h1>
         <p className="text-xl text-gray-600">
           Sistema de Registro de Atendimentos
         </p>
@@ -69,10 +66,7 @@ const Dashboard = ({ onNavigate, stats }: DashboardProps) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <button
-          onClick={() => onNavigate('register')}
-          className="bg-blue-500 hover:bg-blue-600 text-white p-8 rounded-lg shadow-lg transition-colors text-left group"
-        >
+        <button onClick={() => onNavigate('register')} className="bg-blue-500 hover:bg-blue-600 text-white p-8 rounded-lg shadow-lg transition-colors text-left group">
           <div className="flex items-center gap-4 mb-4">
             <UserPlus className="w-12 h-12 group-hover:scale-110 transition-transform" />
             <div>
@@ -84,10 +78,7 @@ const Dashboard = ({ onNavigate, stats }: DashboardProps) => {
           </div>
         </button>
 
-        <button
-          onClick={() => onNavigate('visit')}
-          className="bg-green-500 hover:bg-green-600 text-white p-8 rounded-lg shadow-lg transition-colors text-left group"
-        >
+        <button onClick={() => onNavigate('visit')} className="bg-green-500 hover:bg-green-600 text-white p-8 rounded-lg shadow-lg transition-colors text-left group">
           <div className="flex items-center gap-4 mb-4">
             <ClipboardList className="w-12 h-12 group-hover:scale-110 transition-transform" />
             <div>
@@ -99,10 +90,7 @@ const Dashboard = ({ onNavigate, stats }: DashboardProps) => {
           </div>
         </button>
 
-        <button
-          onClick={() => onNavigate('people')}
-          className="bg-purple-500 hover:bg-purple-600 text-white p-8 rounded-lg shadow-lg transition-colors text-left group"
-        >
+        <button onClick={() => onNavigate('people')} className="bg-purple-500 hover:bg-purple-600 text-white p-8 rounded-lg shadow-lg transition-colors text-left group">
           <div className="flex items-center gap-4 mb-4">
             <Users className="w-12 h-12 group-hover:scale-110 transition-transform" />
             <div>
@@ -114,10 +102,7 @@ const Dashboard = ({ onNavigate, stats }: DashboardProps) => {
           </div>
         </button>
 
-        <button
-          onClick={() => onNavigate('reports')}
-          className="bg-orange-500 hover:bg-orange-600 text-white p-8 rounded-lg shadow-lg transition-colors text-left group"
-        >
+        <button onClick={() => onNavigate('reports')} className="bg-orange-500 hover:bg-orange-600 text-white p-8 rounded-lg shadow-lg transition-colors text-left group">
           <div className="flex items-center gap-4 mb-4">
             <BarChart3 className="w-12 h-12 group-hover:scale-110 transition-transform" />
             <div>
@@ -129,8 +114,6 @@ const Dashboard = ({ onNavigate, stats }: DashboardProps) => {
           </div>
         </button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Dashboard;
