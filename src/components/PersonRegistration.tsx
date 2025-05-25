@@ -6,17 +6,17 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+
 interface PersonRegistrationProps {
   onBack: () => void;
   onSave: (person: any) => void;
 }
+
 const PersonRegistration = ({
   onBack,
   onSave
 }: PersonRegistrationProps) => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     birthYear: '',
@@ -27,12 +27,79 @@ const PersonRegistration = ({
     address: '',
     notes: ''
   });
+
+  const cities = [
+    'São Paulo',
+    'Rio de Janeiro',
+    'Belo Horizonte',
+    'Salvador',
+    'Brasília',
+    'Fortaleza',
+    'Curitiba',
+    'Recife',
+    'Porto Alegre',
+    'Manaus',
+    'Belém',
+    'Goiânia',
+    'Guarulhos',
+    'Campinas',
+    'São Luís',
+    'São Gonçalo',
+    'Maceió',
+    'Duque de Caxias',
+    'Campo Grande',
+    'Natal',
+    'Teresina',
+    'São Bernardo do Campo',
+    'Nova Iguaçu',
+    'João Pessoa',
+    'Santo André',
+    'São José dos Campos',
+    'Jaboatão dos Guararapes',
+    'Osasco',
+    'Ribeirão Preto',
+    'Uberlândia',
+    'Contagem',
+    'Sorocaba',
+    'Aracaju',
+    'Feira de Santana',
+    'Cuiabá',
+    'Joinville',
+    'Juiz de Fora',
+    'Londrina',
+    'Aparecida de Goiânia',
+    'Niterói',
+    'Ananindeua',
+    'Porto Velho',
+    'Serra',
+    'Caxias do Sul',
+    'Vila Velha',
+    'Florianópolis',
+    'Macapá',
+    'Campos dos Goytacazes',
+    'São José do Rio Preto',
+    'Mauá',
+    'Carapicuíba',
+    'Olinda',
+    'Campina Grande',
+    'São José dos Pinhais',
+    'Mogi das Cruzes',
+    'Diadema',
+    'Betim',
+    'Jundiaí',
+    'Piracicaba',
+    'Cariacica',
+    'Bauru',
+    'Montes Claros'
+  ];
+
   const calculateAge = (birthYear: string): number => {
     if (!birthYear) return 0;
     const currentYear = new Date().getFullYear();
     const birth = parseInt(birthYear);
     return currentYear - birth;
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.birthYear || !formData.gender || !formData.city) {
@@ -80,13 +147,16 @@ const PersonRegistration = ({
       notes: ''
     });
   };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
-  return <div className="max-w-2xl mx-auto">
+
+  return (
+    <div className="max-w-2xl mx-auto">
       <div className="mb-6">
         <Button onClick={onBack} variant="outline" className="mb-4 text-lg px-6 py-3">
           <ArrowLeft className="w-5 h-5 mr-2" />
@@ -136,7 +206,18 @@ const PersonRegistration = ({
                 <Label htmlFor="city" className="text-lg font-semibold">
                   Cidade *
                 </Label>
-                <Input id="city" value={formData.city} onChange={e => handleInputChange('city', e.target.value)} placeholder="Digite a cidade" className="text-lg py-3" required />
+                <Select value={formData.city} onValueChange={value => handleInputChange('city', value)}>
+                  <SelectTrigger className="text-lg py-3">
+                    <SelectValue placeholder="Selecione a cidade" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60">
+                    {cities.map((city) => (
+                      <SelectItem key={city} value={city}>
+                        {city}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -175,6 +256,8 @@ const PersonRegistration = ({
           </form>
         </CardContent>
       </Card>
-    </div>;
+    </div>
+  );
 };
+
 export default PersonRegistration;
