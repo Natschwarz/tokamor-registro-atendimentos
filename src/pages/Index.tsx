@@ -10,6 +10,7 @@ interface Person {
   id: number;
   name: string;
   age: string;
+  birthYear?: string; // New field for birth year
   gender: string;
   city: string;
   hospitalId: string;

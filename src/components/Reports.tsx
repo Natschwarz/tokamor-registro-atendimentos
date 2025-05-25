@@ -4,6 +4,7 @@ import { ArrowLeft, Users, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { getDisplayAge } from '@/utils/ageCalculator';
 
 interface Visit {
   id: number;
@@ -34,9 +35,9 @@ const Reports = ({ onBack, visits, people }: ReportsProps) => {
     value: count
   }));
 
-  // Age groups
+  // Age groups - using current calculated age
   const ageGroups = people.reduce((acc, person) => {
-    const age = parseInt(person.age);
+    const age = parseInt(getDisplayAge(person));
     let group;
     if (age < 18) group = '0-17';
     else if (age < 30) group = '18-29';

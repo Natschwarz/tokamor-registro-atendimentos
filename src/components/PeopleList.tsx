@@ -4,11 +4,13 @@ import { ArrowLeft, Search, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getDisplayAge } from '@/utils/ageCalculator';
 
 interface Person {
   id: number;
   name: string;
   age: string;
+  birthYear?: string;
   gender: string;
   city: string;
   hospitalId: string;
@@ -75,7 +77,7 @@ const PeopleList = ({ onBack, people }: PeopleListProps) => {
                       {person.name}
                     </h3>
                     <div className="space-y-1 text-gray-600">
-                      <div><strong>Idade:</strong> {person.age} anos</div>
+                      <div><strong>Idade:</strong> {getDisplayAge(person)} anos</div>
                       <div><strong>Sexo:</strong> {person.gender}</div>
                       <div><strong>Cidade:</strong> {person.city}</div>
                     </div>

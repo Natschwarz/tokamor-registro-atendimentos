@@ -17,7 +17,7 @@ const PersonRegistration = ({ onBack, onSave }: PersonRegistrationProps) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
-    age: '',
+    birthYear: '',
     gender: '',
     city: '',
     hospitalId: '',
@@ -26,10 +26,17 @@ const PersonRegistration = ({ onBack, onSave }: PersonRegistrationProps) => {
     notes: ''
   });
 
+  const calculateAge = (birthYear: string): number => {
+    if (!birthYear) return 0;
+    const currentYear = new Date().getFullYear();
+    const birth = parseInt(birthYear);
+    return currentYear - birth;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.age || !formData.gender || !formData.city) {
+    if (!formData.name || !formData.birthYear || !formData.gender || !formData.city) {
       toast({
         title: "Campos obrigatórios",
         description: "Por favor, preencha todos os campos obrigatórios.",
@@ -38,8 +45,21 @@ const PersonRegistration = ({ onBack, onSave }: PersonRegistrationProps) => {
       return;
     }
 
+    // Validate birth year
+    const currentYear = new Date().getFullYear();
+    const birth = parseInt(formData.birthYear);
+    if (birth < 1900 || birth > currentYear) {
+      toast({
+        title: "Ano inválido",
+        description: "Por favor, digite um ano de nascimento válido.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const newPerson = {
       ...formData,
+      age: calculateAge(formData.birthYear).toString(), // Keep age for compatibility
       id: Date.now(),
       createdAt: new Date().toISOString()
     };
@@ -54,7 +74,7 @@ const PersonRegistration = ({ onBack, onSave }: PersonRegistrationProps) => {
     // Reset form
     setFormData({
       name: '',
-      age: '',
+      birthYear: '',
       gender: '',
       city: '',
       hospitalId: '',
@@ -104,18 +124,25 @@ const PersonRegistration = ({ onBack, onSave }: PersonRegistrationProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="age" className="text-lg font-semibold">
-                  Idade *
+                <Label htmlFor="birthYear" className="text-lg font-semibold">
+                  Ano de Nascimento *
                 </Label>
                 <Input
-                  id="age"
+                  id="birthYear"
                   type="number"
-                  value={formData.age}
-                  onChange={(e) => handleInputChange('age', e.target.value)}
-                  placeholder="Digite a idade"
+                  value={formData.birthYear}
+                  onChange={(e) => handleInputChange('birthYear', e.target.value)}
+                  placeholder="Ex: 1960"
                   className="text-lg py-3"
+                  min="1900"
+                  max={new Date().getFullYear()}
                   required
                 />
+                {formData.birthYear && (
+                  <p className="text-sm text-gray-600">
+                    Idade atual: {calculateAge(formData.birthYear)} anos
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
