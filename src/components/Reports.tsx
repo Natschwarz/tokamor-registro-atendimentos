@@ -1,10 +1,10 @@
-
 import React from 'react';
-import { ArrowLeft, Users, Calendar } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, FileSpreadsheet, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { getDisplayAge } from '@/utils/ageCalculator';
+import * as XLSX from 'xlsx';
 
 interface Visit {
   id: number;
@@ -13,6 +13,8 @@ interface Visit {
   personGender: string;
   personAge: string;
   serviceType: string;
+  description: string;
+  notes: string;
   date: string;
 }
 
@@ -23,6 +25,62 @@ interface ReportsProps {
 }
 
 const Reports = ({ onBack, visits, people }: ReportsProps) => {
+  // Get today's visits
+  const getTodayVisits = () => {
+    const today = new Date().toISOString().split('T')[0];
+    return visits.filter(visit => visit.date === today);
+  };
+
+  const exportTodayVisitsToExcel = () => {
+    const todayVisits = getTodayVisits();
+    
+    if (todayVisits.length === 0) {
+      alert('Não há visitas registradas para hoje.');
+      return;
+    }
+
+    // Prepare data for Excel
+    const excelData = todayVisits.map(visit => ({
+      'Nome': visit.personName,
+      'Cidade': visit.personCity,
+      'Sexo': visit.personGender === 'masculino' ? 'Masculino' : 'Feminino',
+      'Idade': visit.personAge,
+      'Tipo de Serviço': visit.serviceType,
+      'Descrição': visit.description,
+      'Observações': visit.notes,
+      'Data': new Date(visit.date).toLocaleDateString('pt-BR')
+    }));
+
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+
+    // Set column widths
+    const colWidths = [
+      { wch: 20 }, // Nome
+      { wch: 15 }, // Cidade
+      { wch: 10 }, // Sexo
+      { wch: 8 },  // Idade
+      { wch: 20 }, // Tipo de Serviço
+      { wch: 30 }, // Descrição
+      { wch: 25 }, // Observações
+      { wch: 12 }  // Data
+    ];
+    ws['!cols'] = colWidths;
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Visitas do Dia');
+
+    // Generate filename with today's date
+    const today = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+    const filename = `visitas-${today}.xlsx`;
+
+    // Save file
+    XLSX.writeFile(wb, filename);
+  };
+
+  const todayVisits = getTodayVisits();
+
   // Gender distribution
   const genderData = people.reduce((acc, person) => {
     const gender = person.gender === 'masculino' ? 'Masculino' : 'Feminino';
@@ -100,6 +158,55 @@ const Reports = ({ onBack, visits, people }: ReportsProps) => {
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Relatórios e Estatísticas</h1>
         <p className="text-lg text-gray-600">Indicadores para gestão e captação de recursos</p>
       </div>
+
+      {/* Daily Report Card */}
+      <Card className="mb-6 bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Relatório do Dia - {new Date().toLocaleDateString('pt-BR')}
+            </div>
+            <Button
+              onClick={exportTodayVisitsToExcel}
+              className="bg-green-600 hover:bg-green-700"
+              disabled={todayVisits.length === 0}
+            >
+              <FileSpreadsheet className="w-4 h-4 mr-2" />
+              Exportar para Excel
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-blue-800 mb-2">
+            {todayVisits.length} visitas hoje
+          </div>
+          {todayVisits.length === 0 ? (
+            <p className="text-gray-600">Nenhuma visita registrada para hoje.</p>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">
+                Clique em "Exportar para Excel" para gerar o relatório completo das visitas de hoje.
+              </p>
+              <div className="text-sm text-gray-700">
+                <strong>Últimas visitas:</strong>
+                <ul className="mt-1 space-y-1">
+                  {todayVisits.slice(0, 3).map(visit => (
+                    <li key={visit.id}>
+                      {visit.personName} - {visit.serviceType}
+                    </li>
+                  ))}
+                  {todayVisits.length > 3 && (
+                    <li className="text-gray-500">
+                      ... e mais {todayVisits.length - 3} visitas
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
