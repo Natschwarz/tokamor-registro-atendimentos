@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Dashboard from '@/components/Dashboard';
 import PersonRegistration from '@/components/PersonRegistration';
@@ -70,6 +69,10 @@ const Index = () => {
     setVisits(prev => [...prev, visit]);
   };
 
+  const handleImportPeople = (importedPeople: Person[]) => {
+    setPeople(prev => [...prev, ...importedPeople]);
+  };
+
   const getStats = () => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
@@ -108,6 +111,7 @@ const Index = () => {
           <PeopleList
             onBack={() => setCurrentSection('dashboard')}
             people={people}
+            onImportPeople={handleImportPeople}
           />
         );
       case 'reports':
