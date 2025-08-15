@@ -18,6 +18,33 @@
   </head>
 
   <body>
+    <h2>Cadastro de Assistido</h2>
+<form id="formAssistido" onsubmit="enviarCadastroAssistido(); return false;">
+  <input id="cpf" type="text" placeholder="CPF (11 dígitos)" required />
+  <input id="nome" type="text" placeholder="Nome completo" required />
+  <input id="genero" type="text" placeholder="Gênero" />
+  <input id="cidade" type="text" placeholder="Cidade" />
+  <input id="estado" type="text" placeholder="Estado" />
+  <input id="tipo" type="text" placeholder="Tipo (Paciente, Acompanhante...)" />
+  <button type="submit">Cadastrar</button>
+</form>
+
+<script src="bigquery_integration.js"></script>
+<script>
+  function enviarCadastroAssistido() {
+    const cpf = document.getElementById('cpf').value;
+    const nome = document.getElementById('nome').value;
+    const genero = document.getElementById('genero').value;
+    const cidade = document.getElementById('cidade').value;
+    const estado = document.getElementById('estado').value;
+    const tipo = document.getElementById('tipo').value;
+
+    const resultado = cadastrarAssistido(cpf, nome, genero, cidade, estado, tipo);
+    console.log('Cadastro enviado:', resultado);
+    alert('Cadastro realizado com sucesso!');
+  }
+</script>
+
     <div id="root"></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
